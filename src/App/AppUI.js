@@ -7,6 +7,7 @@ import { TodoItem } from '../TodoItem';
 import { CreateTodoButton } from '../CreateTodoButton';
 import { FormTodo } from '../FormTodo';
 import { Modal } from '../Modal';
+import { TodoHeader } from '../TodoHeader';
 import './AppUI.css';
 
 function AppUI() {
@@ -16,26 +17,35 @@ function AppUI() {
     searchedTodos,
     completeTodo,
     deleteTodo,
-    openModal
+    openModal,
+    totalTodos,
+    completedTodos,
+    searchValue,
+    setSearchValue
   } = React.useContext(TodoContext);
 
   return (
     <React.Fragment>
-      <TodoCounter />
-      <TodoSearch />
-
+      <TodoHeader>
+        <TodoCounter
+          total={totalTodos}
+          completed={completedTodos} />
+        <TodoSearch
+          searchValue={searchValue}
+          setSearchValue={setSearchValue} />
+      </TodoHeader>
       <TodoList>
         {error && <p>Desespérate, hubo un error...</p>}
         {/* Skeleton css  */}
         {loading &&
           new Array(4).fill().map((item, index) => (
-            <li className="TodoItem-loading">
-            <div className="LoaderBalls">
-                <span className="LoaderBalls__item"></span>
-                <span className="LoaderBalls__item"></span>
-                <span className="LoaderBalls__item"></span>
-            </div>
-        </li>
+            <li className="TodoItem-loading" key={index}>
+              <div className="LoaderBalls">
+                <span className="LoaderBalls__item"/>
+                <span className="LoaderBalls__item"/>
+                <span className="LoaderBalls__item"/>
+              </div>
+            </li>
           ))}
         {searchedTodos.map(todo => (
           <TodoItem
