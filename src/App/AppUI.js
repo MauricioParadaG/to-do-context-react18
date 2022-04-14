@@ -7,6 +7,7 @@ import { TodoItem } from '../TodoItem';
 import { CreateTodoButton } from '../CreateTodoButton';
 import { FormTodo } from '../FormTodo';
 import { Modal } from '../Modal';
+import './AppUI.css';
 
 function AppUI() {
   const {
@@ -25,9 +26,17 @@ function AppUI() {
 
       <TodoList>
         {error && <p>Desespérate, hubo un error...</p>}
-        {loading && <p>Estamos cargando, no desesperes...</p>}
-        {(!loading && !searchedTodos.length) && <p>¡Crea tu primer TODO!</p>}
-
+        {/* Skeleton css  */}
+        {loading &&
+          new Array(4).fill().map((item, index) => (
+            <li className="TodoItem-loading">
+            <div className="LoaderBalls">
+                <span className="LoaderBalls__item"></span>
+                <span className="LoaderBalls__item"></span>
+                <span className="LoaderBalls__item"></span>
+            </div>
+        </li>
+          ))}
         {searchedTodos.map(todo => (
           <TodoItem
             key={todo.text}
@@ -38,10 +47,10 @@ function AppUI() {
           />
         ))}
       </TodoList>
-      {openModal && 
-      <Modal>
-        <FormTodo/>
-      </Modal>}
+      {openModal &&
+        <Modal>
+          <FormTodo />
+        </Modal>}
 
       <CreateTodoButton />
     </React.Fragment>
