@@ -1,10 +1,8 @@
-import React, {useContext} from 'react';
-import { TodoContext } from '../TodoContext';
+import React from 'react';
 import './CreateTodoButton.css';
 
 
-function CreateTodoButton() {
-  const {openModal, setOpenModal} = useContext(TodoContext);
+function CreateTodoButton({openModal, setOpenModal}) {
 
   const onClickButton = () => {
     !openModal ? setOpenModal(true)
