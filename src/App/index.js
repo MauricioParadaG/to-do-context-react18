@@ -27,17 +27,43 @@ function App() {
   } = useTodoProvider();
   return (
     <React.Fragment>
-      <TodoHeader>
+      <TodoHeader loading={loading}>
         <TodoCounter
           total={totalTodos}
-          completed={completedTodos} />
+          completed={completedTodos}
+          /* loading={loading} */ />
         <TodoSearch
           searchValue={searchValue}
-          setSearchValue={setSearchValue} />
+          setSearchValue={setSearchValue}
+          /* loading={loading} */ />
       </TodoHeader>
-      <TodoList>
+      <TodoList
+        error={error}
+        loading={loading}
+        searchedTodos={searchedTodos}
+        onError={() => <p>Desespérate, hubo un error...</p>}
+        onEmptySearch={() => <p>No existen To-Do's para el texto: {searchValue}</p>}
+        onLoading={() => new Array(4).fill().map((item, index) => (
+          <li className="TodoItem-loading" key={index}>
+            <div className="LoaderBalls">
+              <span className="LoaderBalls__item" />
+              <span className="LoaderBalls__item" />
+              <span className="LoaderBalls__item" />
+            </div>
+          </li>
+        ))}
+        renderTodos={todo => (
+          <TodoItem
+            key={todo.text}
+            text={todo.text}
+            completed={todo.completed}
+            onComplete={() => completeTodo(todo.text)}
+            onDelete={() => deleteTodo(todo.text)}
+          />
+        )}
+      />
+      {/*       <TodoList>
         {error && <p>Desespérate, hubo un error...</p>}
-        {/* Skeleton css  */}
         {loading &&
           new Array(4).fill().map((item, index) => (
             <li className="TodoItem-loading" key={index}>
@@ -57,7 +83,7 @@ function App() {
             onDelete={() => deleteTodo(todo.text)}
           />
         ))}
-      </TodoList>
+      </TodoList> */}
       {openModal &&
         <Modal>
           <FormTodo
