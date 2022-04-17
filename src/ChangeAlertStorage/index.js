@@ -1,7 +1,8 @@
 import React from 'react';
-import { withStorageListener } from './withStorageListener';
+import { useStorageListener } from './useStorageListener';
 
-function ChangeAlertStorage({ showAlert, toggleShow }) {
+function ChangeAlertStorage({syncItems}) {
+  const { showAlert, toggleShow } = useStorageListener(syncItems);
   if (showAlert) {
     const refreshPage = () => {
       toggleShow()
@@ -17,8 +18,6 @@ function ChangeAlertStorage({ showAlert, toggleShow }) {
   }
 }
 
-const ChangeAlertWithStorageListener = withStorageListener(ChangeAlertStorage);
-
-export { ChangeAlertWithStorageListener };
+export { ChangeAlertStorage };
 
 

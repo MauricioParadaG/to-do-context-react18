@@ -8,7 +8,7 @@ import { CreateTodoButton } from '../CreateTodoButton';
 import { FormTodo } from '../FormTodo';
 import { Modal } from '../Modal';
 import { TodoHeader } from '../TodoHeader';
-import { ChangeAlertWithStorageListener } from '../ChangeAlertStorage';
+import { ChangeAlertStorage } from '../ChangeAlertStorage';
 import './AppUI.css';
 
 function App() {
@@ -95,7 +95,7 @@ function App() {
       <CreateTodoButton
         openModal={openModal}
         setOpenModal={setOpenModal} />
-        <ChangeAlertWithStorageListener syncItems={syncItems}/>
+        <ChangeAlertStorage syncItems={syncItems}/>
     </React.Fragment>
   );
 }
