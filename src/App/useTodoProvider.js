@@ -7,6 +7,7 @@ function useTodoProvider() {
     saveItem: saveTodos,
     loading,
     error,
+    syncItems,
   } = useLocalStorage('TODOS_V1', []);
   const [searchValue, setSearchValue] = React.useState('');
   const [openModal, setOpenModal] = React.useState(false);
@@ -62,7 +63,8 @@ function useTodoProvider() {
     deleteTodo,
     openModal,
     setOpenModal,
-    addTodo
+    addTodo,
+    syncItems
   };
 }
 
