@@ -1,10 +1,45 @@
 import React from 'react';
 
+const initialState = ({initialValue}) => ({
+  error: false,
+  loading:true,
+  item:initialValue,
+  syncItem :true
+});
+
+const actionTypes = {
+  error: 'ERROR',
+  writeinput: 'WRITEINPUT',
+}
+
+const reducerObject = (state, payload) => ({
+  [actionTypes.error]: {
+    ...state,
+    error: true,
+    loading: false,
+  },
+  [actionTypes.writeinput]: {
+    ...state,
+    value: payload
+  },
+})
+
+const reducer = (state, action) => {
+  return (reducerObject(state, action.payload)[action.type] || state);
+};
+
 function useLocalStorage(itemName, initialValue) {
-  const [error, setError] = React.useState(false);
+  const [state, dispatch] = React.useReducer(reducer, initialState({initialValue}));
+  const { error, loading, item, syncItem } = state;
+
+/*   const [error, setError] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [item, setItem] = React.useState(initialValue);
-  const [syncItem, setSyncItem] = React.useState(true);
+  const [syncItem, setSyncItem] = React.useState(true); */
+
+  const onError = () => {
+    dispatch({ type: actionTypes.error });
+  }
 
   React.useEffect(() => {
     setTimeout(() => {
