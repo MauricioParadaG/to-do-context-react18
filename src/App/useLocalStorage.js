@@ -1,15 +1,17 @@
 import React from 'react';
 
-const initialState = ({initialValue}) => ({
+const initialState = ({ initialValue }) => ({
   error: false,
-  loading:true,
-  item:initialValue,
-  syncItem :true
+  loading: true,
+  item: initialValue,
+  syncItem: true
 });
 
 const actionTypes = {
   error: 'ERROR',
-  writeinput: 'WRITEINPUT',
+  success: 'SUCCESS',
+  saveItem: 'SAVEITEM',
+  syncItems: 'SYNCITEMS',
 }
 
 const reducerObject = (state, payload) => ({
@@ -18,9 +20,21 @@ const reducerObject = (state, payload) => ({
     error: true,
     loading: false,
   },
-  [actionTypes.writeinput]: {
+  [actionTypes.success]: {
     ...state,
-    value: payload
+    error: false,
+    loading: false,
+    syncItem: true,
+    item: payload,
+  },
+  [actionTypes.saveItem]: {
+    ...state,
+    item: payload,
+  },
+  [actionTypes.syncItems]: {
+    ...state,
+    loading: true,
+    syncItem: false,
   },
 })
 
@@ -29,16 +43,28 @@ const reducer = (state, action) => {
 };
 
 function useLocalStorage(itemName, initialValue) {
-  const [state, dispatch] = React.useReducer(reducer, initialState({initialValue}));
+  const [state, dispatch] = React.useReducer(reducer, initialState({ initialValue }));
   const { error, loading, item, syncItem } = state;
 
-/*   const [error, setError] = React.useState(false);
-  const [loading, setLoading] = React.useState(true);
-  const [item, setItem] = React.useState(initialValue);
-  const [syncItem, setSyncItem] = React.useState(true); */
+  /*   const [error, setError] = React.useState(false);
+    const [loading, setLoading] = React.useState(true);
+    const [item, setItem] = React.useState(initialValue);
+    const [syncItem, setSyncItem] = React.useState(true); */
 
-  const onError = () => {
-    dispatch({ type: actionTypes.error });
+  const onError = (error) => {
+    dispatch({ type: actionTypes.error, payload: error });
+  }
+
+  const onSuccess = (parsedItem) => {
+    dispatch({ type: actionTypes.success, payload: parsedItem });
+  }
+
+  const onSaveItem = (newItem) => {
+    dispatch({ type: actionTypes.saveItem, payload: newItem });
+  }
+
+  const onSyncItems = () => {
+    dispatch({ type: actionTypes.syncItems });
   }
 
   React.useEffect(() => {
@@ -54,11 +80,12 @@ function useLocalStorage(itemName, initialValue) {
           parsedItem = JSON.parse(localStorageItem);
         }
 
-        setItem(parsedItem);
+        onSuccess(parsedItem);
+        /* setItem(parsedItem);
         setLoading(false);
-        setSyncItem(true);
+        setSyncItem(true); */
       } catch (error) {
-        setError(error);
+        onError(error);
       }
     }, 2000);
   }, [syncItem]);
@@ -67,15 +94,17 @@ function useLocalStorage(itemName, initialValue) {
     try {
       const stringifiedItem = JSON.stringify(newItem);
       localStorage.setItem(itemName, stringifiedItem);
-      setItem(newItem);
+      //setItem(newItem);
+      onSaveItem(newItem);
     } catch (error) {
-      setError(error);
+      onError(error);
     }
   };
 
   const syncItems = () => {
-    setLoading(true);
-    setSyncItem(false);
+    onSyncItems();
+    /*     setLoading(true);
+        setSyncItem(false); */
   }
 
   return {
@@ -88,3 +117,4 @@ function useLocalStorage(itemName, initialValue) {
 }
 
 export { useLocalStorage };
+
